@@ -1,14 +1,12 @@
 import app from './app.js';
 import config from './config/config.js';
 import { initializeWebSocketServer } from './websocket/websocket.server.js';
-import {
-    startCleanupScheduler
-} from './jobs/job.cleanup.js';
+import { startCleanupScheduler } from './jobs/job.cleanup.js';
 
-const server = app.listen(config.port, () => {
+const PORT = process.env.PORT || config.server.port || 8080;
 
-    console.log(`Server is running on port ${config.server.port}`);
-
+const server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 initializeWebSocketServer(server);
