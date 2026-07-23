@@ -31,17 +31,26 @@ export function submitAnalysisRequest(request) {
         request
     };
 
-    createJob(job);
+    const baseUrl = process.env.BASE_URL || `http://${config.server.host}:${config.server.port}`;
 
-    executeAnalysis(job)
-        .catch(error => {
-            console.error(error);
-        });
+    const websocketUrl =
+        baseUrl
+            .replace('http://', 'ws://')
+            .replace('https://', 'wss://')
+        + `/ws/${jobId}`;
+
+        createJob(job);
+
+        executeAnalysis(job)
+            .catch(error => {
+                console.error(error);
+            });
+    
 
     return {
         accepted: true,
         message: 'Analysis request accepted.',
         jobId,
-        websocketUrl:`${config.websocket.protocol}://${config.server.host}:${config.server.port}/ws/${jobId}`
+        websocketUrl
     };
 }
